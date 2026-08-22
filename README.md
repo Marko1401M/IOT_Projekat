@@ -2,6 +2,14 @@
 
 ## Pokretanje
 
+### Unapred potrebno:
+
+- Python 3.x
+- Node.js + npm
+- .NET SDK
+- MongoDB
+- Angular CLI
+
 ### MQTT - Mosquitto
 
 - Preuzeti Eclipse Mosquitto sa linka: https://mosquitto.org/download/
