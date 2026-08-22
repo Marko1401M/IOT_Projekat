@@ -12,7 +12,7 @@ MQTT_TOPIC = "iot/environment"
 
 REQUIRED_FIELDS = ["temperature", "humidity", "light", "status"]
 
-# ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
+ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2) # type: ignore
 client.connect(MQTT_BROKER, MQTT_PORT, 60)
@@ -20,40 +20,29 @@ client.loop_start()
 
 print("Bridge started.")
 
-data = {
-    "temperature": 25.4,
-    "humidity": 61.2,
-    "light": 850,
-    "status": "OK",
-    "timestamp": datetime.now(timezone.utc).isoformat()
-}
+while True:
+    try:
+        line = ser.readline().decode("utf-8").strip()
 
-client.publish(MQTT_TOPIC, json.dumps(data))
+        if not line:
+            continue
 
-# while True:
-#     try:
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError:
+            print("Invalid JSON:", line)
+            continue
 
-#         line = ser.readline().decode("utf-8").strip()
+        if not all(field in data for field in REQUIRED_FIELDS):
+            print("Incomplete data:", data)
+            continue
 
-#         if not line:
-#             continue
+        data["timestamp"] = datetime.now(timezone.utc).isoformat()
 
-#         try:
-#             data = json.loads(line)
-#         except json.JSONDecodeError:
-#             print("Invalid JSON:", line)
-#             continue
+        print(data)
 
-#         if not all(field in data for field in REQUIRED_FIELDS):
-#             print("Incomplete data:", data)
-#             continue
+        client.publish(MQTT_TOPIC, json.dumps(data))
 
-#         data["timestamp"] = datetime.now(timezone.utc).isoformat()
-
-#         print(data)
-
-#         client.publish(MQTT_TOPIC, json.dumps(data))
-
-#     except serial.SerialException as error:
-#         print("Serial connection error:", error)
-#         break
+    except serial.SerialException as error:
+        print("Serial connection error:", error)
+        break
