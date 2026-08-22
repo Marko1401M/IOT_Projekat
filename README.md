@@ -23,6 +23,7 @@
 
 - ``` npm install -g --unsafe-perm node-red ```
 - ``` node-red ```
+- Import ```flows.json``` fajl
 
 ### Backend
 
