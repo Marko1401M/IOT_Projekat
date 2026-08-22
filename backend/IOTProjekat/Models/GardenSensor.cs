@@ -11,6 +11,7 @@ namespace IOTProjekat.Models
         public decimal Light { get; set; }
         public decimal Temperature { get; set; }
         public decimal AirHumidity { get; set; }
+        public string Status { get; set; }
         public DateTime Time { get; set; }
     }
 }

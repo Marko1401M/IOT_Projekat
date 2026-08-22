@@ -17,9 +17,10 @@ namespace IOTProjekat.Services
             var data = new GardenSensor
             {
                 Temperature = dto.Temperature,
-                AirHumidity = dto.AirHumidity,
+                AirHumidity = dto.Humidity,
                 Light = dto.Light,
-                Time = DateTime.UtcNow
+                Time = dto.Timestamp,
+                Status = dto.Status,
             };
             await _context.GardenSensors.InsertOneAsync(data);
         }
